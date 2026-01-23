@@ -1,8 +1,0 @@
-*.parquet
-*.csv.gz
-__pycache__/
-raw_data
-pgadmin_data
-ny_taxi_postgres_data
-load_taxi_zone.ipynb
-taxi_zone_lookup.csv
