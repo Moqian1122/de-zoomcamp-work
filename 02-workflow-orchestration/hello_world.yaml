@@ -1,0 +1,29 @@
+id: hello_world
+namespace: zoomcamp.moqian
+labels:
+  tag: Getting Started
+description: |
+  The flow would print 'Hello World' message to logs
+
+inputs:
+  - id: name
+    type: STRING
+    defaults: You
+
+variables:
+  welcome_message: "Hello! {{ inputs.name }}!"
+
+tasks:
+  - id: hello_world
+    type: io.kestra.plugin.core.log.Log
+    message: "{{ render(vars.welcome_message) }}"
+    description: |
+      The task will print customized welcome message to logs
+
+  - id: python_script
+    type: io.kestra.plugin.scripts.python.Script
+    containerImage: python:3.13-slim
+    script: |
+      print("{{ render(vars.welcome_message) }}")
+    description: |
+      The task will print customized welcome message to output
