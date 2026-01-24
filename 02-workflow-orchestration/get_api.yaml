@@ -1,0 +1,46 @@
+id: get_api
+namespace: zoomcamp.moqian
+description: |
+  This is a pipeline to get status code and data with Dummy JSON API.
+labels: 
+  tag: Getting Started
+
+inputs:
+  - id: api_url
+    type: STRING
+    defaults: https://www.dummyjson.com/products
+
+tasks:
+  - id: request
+    type: io.kestra.plugin.core.http.Request
+    uri: "{{ inputs.api_url }}"
+
+  - id: log
+    type: io.kestra.plugin.core.log.Log
+    message: "API Status Code: {{ outputs.request.code }}"
+
+  - id: python
+    type: io.kestra.plugin.scripts.python.Script
+    containerImage: python:3.13-slim
+    beforeCommands:
+      - pip install polars
+    outputFiles:
+      - "products.csv"
+    script: |
+      import polars as pl
+      df = pl.from_dicts({{ outputs.request.body | jq('.products') | first }})
+      df.glimpse()
+      df.select(["brand", "price"]).write_csv("products.csv")
+
+  - id: query
+    type: io.kestra.plugin.jdbc.duckdb.Queries
+    inputFiles:
+      in.csv: "{{ outputs.python.outputFiles['products.csv'] }}"
+    url: "jdbc:duckdb:"
+    timeZoneId: Europe/Paris
+    sql: |
+      SELECT brand, ROUND(AVG(price), 2) AS AvgPrice
+      FROM read_csv_auto("{{ workingDir }}/in.csv", header=True)
+      GROUP BY brand
+      ORDER BY AvgPrice DESC;
+    store: true
