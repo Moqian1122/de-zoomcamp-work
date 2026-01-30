@@ -16,7 +16,7 @@ variables:
 tasks:
   - id: hello_world
     type: io.kestra.plugin.core.log.Log
-    message: "{{ render(vars.welcome_message) }}"
+    message: "print message {{ render(vars.welcome_message) }} at {{ trigger.date }}"
     description: |
       The task will print customized welcome message to logs
 
@@ -27,3 +27,8 @@ tasks:
       print("{{ render(vars.welcome_message) }}")
     description: |
       The task will print customized welcome message to output
+
+triggers:
+  - id: schedule
+    type: "io.kestra.plugin.core.trigger.Schedule"
+    cron: "58 * * * *"

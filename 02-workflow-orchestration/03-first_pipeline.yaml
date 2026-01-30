@@ -1,0 +1,61 @@
+id: first_pipeline
+namespace: zoomcamp.moqian
+labels:
+  tag: Getting Started
+description: |
+  Extract, transform and load the cleaned data from dummy json
+
+inputs:
+  - id: columns_to_keep
+    type: ARRAY
+    itemType: STRING
+    defaults:
+      - 'brand'
+      - 'price'
+
+tasks:
+    # an id is mandatory
+    # the first task is to get the response given a uri
+  - id: extract
+    type: "io.kestra.plugin.core.http.Download"
+    uri: "https://www.dummyjson.com/products"
+
+    # the second task is to process the raw data retrieved from task 'extract'
+  - id: transform
+    type: "io.kestra.plugin.scripts.python.Script"
+    containerImage: python:3.13-slim
+    inputFiles:
+      data.json: "{{ outputs.extract.uri }}"
+    outputFiles:
+      - "*.json"
+    env:
+      COLUMNS_TO_KEEP: "{{ inputs.columns_to_keep }}"
+    script: |
+      import json
+      import os
+
+      columns_to_keep = json.loads(os.getenv("COLUMNS_TO_KEEP"))
+      
+      with open('data.json', 'r') as file:
+          data = json.load(file)
+      
+      filtered_data = [
+          {column: product.get(column, "N/A") for column in columns_to_keep}
+          for product in data["products"]
+      ]
+
+      with open('products.json', 'w') as file:
+          json.dump(filtered_data, file, indent = 4)
+
+  - id: query
+    type: "io.kestra.plugin.jdbc.duckdb.Queries"
+    inputFiles:
+      products.json: "{{ outputs.transform.outputFiles['products.json'] }}"
+    sql: |
+      INSTALL JSON;
+      LOAD JSON;
+      SELECT brand, ROUND(AVG(price), 2)
+      FROM read_json_auto('{{ workingDir }}/products.json')
+      GROUP BY brand
+      ORDER BY AVG(price) DESC;
+    fetchType: STORE

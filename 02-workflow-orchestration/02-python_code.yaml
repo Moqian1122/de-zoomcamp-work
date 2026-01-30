@@ -1,4 +1,4 @@
-id: get_api
+id: python_code
 namespace: zoomcamp.moqian
 description: |
   This is a pipeline to get status code and data with Dummy JSON API.
@@ -28,7 +28,7 @@ tasks:
       - "products.csv"
     script: |
       import polars as pl
-      df = pl.from_dicts({{ outputs.request.body | jq('.products') | first }})
+      df = pl.from_dicts({{ outputs.request.body | jq(".products") | first }})
       df.glimpse()
       df.select(["brand", "price"]).write_csv("products.csv")
 

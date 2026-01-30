@@ -16,6 +16,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "dotenv>=0.9.9",
     "jupytext>=1.19.0",
     "pgcli>=4.4.0",
     "psycopg-binary>=3.3.2",
