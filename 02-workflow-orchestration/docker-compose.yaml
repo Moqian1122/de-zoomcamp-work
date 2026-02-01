@@ -45,6 +45,8 @@ services:
       - kestra_data:/app/storage
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/kestra-wd:/tmp/kestra-wd
+      - /home/moqian/workspace/de-zoomcamp-work/02-workflow-orchestration/ny_yellow_taxi_data:/data/ny_yellow_taxi_data
+    env_file: "./my_creds/.gcp_creds_encoded"
     environment:
       KESTRA_CONFIGURATION: |
         datasources:

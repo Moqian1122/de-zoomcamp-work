@@ -1,0 +1,32 @@
+id: gcp_kv
+namespace: zoomcamp.moqian
+labels:
+  tag: GCP
+description: |
+  The flow configures GCP GCS (Bucket) and BigQuery database.
+
+tasks:
+
+  - id: gcp_project_id
+    type: "io.kestra.plugin.core.kv.Set"
+    key: GCP_PROJECT_ID
+    keyType: STRING
+    value: project-760c1f32-11db-4942-8e1
+
+  - id: gcp_location
+    type: "io.kestra.plugin.core.kv.Set"
+    key: GCP_LOCATION
+    keyType: STRING
+    value: europe-west2 
+
+  - id: gcp_bucket_name
+    type: "io.kestra.plugin.core.kv.Set"
+    key: GCP_BUCKET_NAME
+    keyType: STRING
+    value: my-first-project-bucket01
+
+  - id: gcp_database
+    type: "io.kestra.plugin.core.kv.Set"
+    key: GCP_DATABASE
+    keyType: STRING
+    value: ny_taxi

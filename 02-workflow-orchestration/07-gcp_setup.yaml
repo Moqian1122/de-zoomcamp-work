@@ -1,0 +1,27 @@
+id: gcp_setup
+namespace: zoomcamp.moqian
+labels:
+  tag: GCP
+description: |
+  The flow sets up GCP Storage and BigQuery.
+
+tasks:
+
+  - id: create_gcs_bucket
+    type: "io.kestra.plugin.gcp.gcs.CreateBucket"
+    storageClass: REGIONAL
+    name: "{{ kv('GCP_BUCKET_NAME') }}"
+    ifExists: SKIP
+
+  - id: create_database
+    type: "io.kestra.plugin.gcp.bigquery.CreateDataset"
+    name: "{{ kv('GCP_DATABASE') }}"
+    ifExists: SKIP
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{ secret('GCP_SERVICE_ACCOUNT') }}"
+      projectID: "{{ kv('GCP_PROJECT_ID') }}"
+      location: "{{ kv('GCP_LOCATION') }}"
+      bucket: "{{ kv('GCP_BUCKET_NAME') }}"
