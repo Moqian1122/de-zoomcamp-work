@@ -1,3 +1,5 @@
+# Queries used in homework3
+
 In README.md I list all queries that I used for homework3.
 
 ```sql
