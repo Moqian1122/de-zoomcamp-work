@@ -17,6 +17,8 @@ dependencies = [
 [dependency-groups]
 dev = [
     "dotenv>=0.9.9",
+    "google>=3.0.0",
+    "google-cloud-storage>=3.9.0",
     "jupytext>=1.19.0",
     "pgcli>=4.4.0",
     "psycopg-binary>=3.3.2",

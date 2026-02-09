@@ -1,0 +1,4 @@
+--2026-02-06 23:27:46--  https://raw.githubusercontent.com/DataTalksClub/data-engineering-zoomcamp/main/cohorts/2026/03-data-warehouse/DLT_upload_to_GCP.ipynb
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.111.133, 185.199.109.133, 185.199.110.133, ...
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|185.199.111.133|:443... connected.
+Unable to establish SSL connection.
